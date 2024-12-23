@@ -2,7 +2,7 @@ using NaughtyAttributes;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace System.Canvas
+namespace Gazeus.DesafioMatch3.Project.Script.Utils
 {
     [ExecuteInEditMode]
     public class CanvasScalerResolutionMatchUpdater : MonoBehaviour
@@ -33,7 +33,7 @@ namespace System.Canvas
             }
         }
 
-        private float GetAspectRatio(float width, float height)
+        public float GetAspectRatio(float width, float height)
         {
             return (Mathf.Round(width / height * 100)) / 100;
         }

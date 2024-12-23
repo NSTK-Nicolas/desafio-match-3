@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using Gazeus.DesafioMatch3.Models;
+using Gazeus.DesafioMatch3.Project.Script.Models;
 using UnityEngine;
 
-namespace Gazeus.DesafioMatch3.Core
+namespace Gazeus.DesafioMatch3.Project.Script.Core
 {
     public class GameService
     {

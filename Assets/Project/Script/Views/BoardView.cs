@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using DG.Tweening;
-using Gazeus.DesafioMatch3.Models;
-using Gazeus.DesafioMatch3.ScriptableObjects;
+using Gazeus.DesafioMatch3.Project.Script.Models;
+using Gazeus.DesafioMatch3.Project.Script.ScriptableObjects;
+using Gazeus.DesafioMatch3.Project.Script.Utils;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Gazeus.DesafioMatch3.Views
+namespace Gazeus.DesafioMatch3.Project.Script.Views
 {
     [Serializable]
     public class AspectRatioCellSize
@@ -23,24 +24,27 @@ namespace Gazeus.DesafioMatch3.Views
         [SerializeField] private GridLayoutGroup _boardContainer;
         [SerializeField] private TilePrefabRepository _tilePrefabRepository;
         [SerializeField] private TileSpotView _tileSpotPrefab;
+        [SerializeField] private CanvasScalerResolutionMatchUpdater _canvasScalerUpdater; // Referência ao script do Canvas Scaler
 
         [Header("Aspect Ratio Settings")]
         [SerializeField] private List<AspectRatioCellSize> _aspectRatioCellSizes; // Lista de valores para diferentes Aspect Ratios
         [SerializeField] private Vector2 _defaultCellSize = new Vector2(100, 100); // Valor padrão caso não encontre correspondência
-        
+
         private GameObject[][] _tiles;
         private TileSpotView[][] _tileSpots;
         
         private void Start()
         {
-            UpdateCellSizeBasedOnAspectRatio();
+            UpdateCellSizeBasedOnCanvasScaler();
         }
 
-        private void UpdateCellSizeBasedOnAspectRatio()
+        private void UpdateCellSizeBasedOnCanvasScaler()
         {
-            float screenAspectRatio = (float)Screen.width / Screen.height;
-            float closestDifference = float.MaxValue;
+            float screenAspectRatio = _canvasScalerUpdater.GetAspectRatio(Screen.width, Screen.height);
             Vector2 selectedCellSize = _defaultCellSize;
+
+            // Busca na lista o Cell Size correspondente ao aspect ratio mais próximo
+            float closestDifference = float.MaxValue;
 
             foreach (var aspectRatioCellSize in _aspectRatioCellSizes)
             {
@@ -51,6 +55,8 @@ namespace Gazeus.DesafioMatch3.Views
                     selectedCellSize = aspectRatioCellSize.CellSize;
                 }
             }
+
+            Debug.Log($"Aspect Ratio: {screenAspectRatio}, Cell Size: {selectedCellSize}");
             _boardContainer.cellSize = selectedCellSize;
         }
 

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Gazeus.DesafioMatch3.Models
+namespace Gazeus.DesafioMatch3.Project.Script.Models
 {
     public struct AddedTileInfo
     {

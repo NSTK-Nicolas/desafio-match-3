@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
 using DG.Tweening;
-using Gazeus.DesafioMatch3.Core;
-using Gazeus.DesafioMatch3.Models;
-using Gazeus.DesafioMatch3.Views;
+using Gazeus.DesafioMatch3.Project.Script.Core;
+using Gazeus.DesafioMatch3.Project.Script.Models;
+using Gazeus.DesafioMatch3.Project.Script.Views;
 using UnityEngine;
 
-namespace Gazeus.DesafioMatch3.Controllers
+namespace Gazeus.DesafioMatch3.Project.Script.Controllers
 {
     public class GameController : MonoBehaviour
     {
