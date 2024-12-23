@@ -8,6 +8,14 @@ using UnityEngine.UI;
 
 namespace Gazeus.DesafioMatch3.Views
 {
+    [Serializable]
+    public class AspectRatioCellSize
+    {
+        public string Name; // Nome descritivo do Aspect Ratio (e.g., "16:9", "4:3")
+        public float AspectRatio; // Valor numérico do Aspect Ratio (e.g., 16f/9f, 4f/3f)
+        public Vector2 CellSize; // Tamanho do Cell Size correspondente
+    }
+    
     public class BoardView : MonoBehaviour
     {
         public event Action<int, int> TileClicked;
@@ -16,8 +24,35 @@ namespace Gazeus.DesafioMatch3.Views
         [SerializeField] private TilePrefabRepository _tilePrefabRepository;
         [SerializeField] private TileSpotView _tileSpotPrefab;
 
+        [Header("Aspect Ratio Settings")]
+        [SerializeField] private List<AspectRatioCellSize> _aspectRatioCellSizes; // Lista de valores para diferentes Aspect Ratios
+        [SerializeField] private Vector2 _defaultCellSize = new Vector2(100, 100); // Valor padrão caso não encontre correspondência
+        
         private GameObject[][] _tiles;
         private TileSpotView[][] _tileSpots;
+        
+        private void Start()
+        {
+            UpdateCellSizeBasedOnAspectRatio();
+        }
+
+        private void UpdateCellSizeBasedOnAspectRatio()
+        {
+            float screenAspectRatio = (float)Screen.width / Screen.height;
+            float closestDifference = float.MaxValue;
+            Vector2 selectedCellSize = _defaultCellSize;
+
+            foreach (var aspectRatioCellSize in _aspectRatioCellSizes)
+            {
+                float difference = Mathf.Abs(screenAspectRatio - aspectRatioCellSize.AspectRatio);
+                if (difference < closestDifference)
+                {
+                    closestDifference = difference;
+                    selectedCellSize = aspectRatioCellSize.CellSize;
+                }
+            }
+            _boardContainer.cellSize = selectedCellSize;
+        }
 
         public void CreateBoard(List<List<Tile>> board)
         {
