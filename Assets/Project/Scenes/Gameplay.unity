@@ -177,15 +177,12 @@ MonoBehaviour:
   _tileSpotPrefab: {fileID: -4864831497923239132, guid: 6527630aaec5689489d14bfbb482fd0f, type: 3}
   _canvasScalerUpdater: {fileID: 1122489958}
   _aspectRatioCellSizes:
-  - Name: Taller
-    AspectRatio: 0.45
-    CellSize: {x: 120, y: 120}
   - Name: 9/16
     AspectRatio: 0.5625
+    CellSize: {x: 45, y: 45}
+  - Name: 9/16
+    AspectRatio: 0.5
     CellSize: {x: 100, y: 100}
-  - Name: Wider
-    AspectRatio: 0.75
-    CellSize: {x: 160, y: 160}
   _defaultCellSize: {x: 100, y: 100}
 --- !u!114 &429446044
 MonoBehaviour:
@@ -482,7 +479,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 1
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 2
