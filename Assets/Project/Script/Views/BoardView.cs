@@ -3,20 +3,11 @@ using System.Collections.Generic;
 using DG.Tweening;
 using Gazeus.DesafioMatch3.Project.Script.Models;
 using Gazeus.DesafioMatch3.Project.Script.ScriptableObjects;
-using Gazeus.DesafioMatch3.Project.Script.Utils;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Gazeus.DesafioMatch3.Project.Script.Views
 {
-    [Serializable]
-    public class AspectRatioCellSize
-    {
-        public string Name; // Nome descritivo do Aspect Ratio (e.g., "16:9", "4:3")
-        public float AspectRatio; // Valor numérico do Aspect Ratio (e.g., 16f/9f, 4f/3f)
-        public Vector2 CellSize; // Tamanho do Cell Size correspondente
-    }
-    
     public class BoardView : MonoBehaviour
     {
         public event Action<int, int> TileClicked;
@@ -24,41 +15,10 @@ namespace Gazeus.DesafioMatch3.Project.Script.Views
         [SerializeField] private GridLayoutGroup _boardContainer;
         [SerializeField] private TilePrefabRepository _tilePrefabRepository;
         [SerializeField] private TileSpotView _tileSpotPrefab;
-        [SerializeField] private CanvasScalerResolutionMatchUpdater _canvasScalerUpdater; // Referência ao script do Canvas Scaler
-
-        [Header("Aspect Ratio Settings")]
-        [SerializeField] private List<AspectRatioCellSize> _aspectRatioCellSizes; // Lista de valores para diferentes Aspect Ratios
-        [SerializeField] private Vector2 _defaultCellSize = new Vector2(100, 100); // Valor padrão caso não encontre correspondência
-
+        
         private GameObject[][] _tiles;
         private TileSpotView[][] _tileSpots;
         
-        private void Start()
-        {
-            UpdateCellSizeBasedOnCanvasScaler();
-        }
-
-        private void UpdateCellSizeBasedOnCanvasScaler()
-        {
-            float screenAspectRatio = _canvasScalerUpdater.GetAspectRatio(Screen.width, Screen.height);
-            Vector2 selectedCellSize = _defaultCellSize;
-
-            // Busca na lista o Cell Size correspondente ao aspect ratio mais próximo
-            float closestDifference = float.MaxValue;
-
-            foreach (var aspectRatioCellSize in _aspectRatioCellSizes)
-            {
-                float difference = Mathf.Abs(screenAspectRatio - aspectRatioCellSize.AspectRatio);
-                if (difference < closestDifference)
-                {
-                    closestDifference = difference;
-                    selectedCellSize = aspectRatioCellSize.CellSize;
-                }
-            }
-
-            Debug.Log($"Aspect Ratio: {screenAspectRatio}, Cell Size: {selectedCellSize}");
-            _boardContainer.cellSize = selectedCellSize;
-        }
 
         public void CreateBoard(List<List<Tile>> board)
         {
