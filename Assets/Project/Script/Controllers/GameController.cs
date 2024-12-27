@@ -4,6 +4,7 @@ using DG.Tweening;
 using Gazeus.DesafioMatch3.Project.Script.Core;
 using Gazeus.DesafioMatch3.Project.Script.Models;
 using Gazeus.DesafioMatch3.Project.Script.Views;
+using Gazeus.DesafioMatch3.Project.Script.Feedbacks;
 using UnityEngine;
 
 namespace Gazeus.DesafioMatch3.Project.Script.Controllers
@@ -43,6 +44,21 @@ namespace Gazeus.DesafioMatch3.Project.Script.Controllers
             BoardSequence boardSequence = boardSequences[index];
 
             Sequence sequence = DOTween.Sequence();
+
+            // Trigger Match 3 FX before destroying tiles
+            foreach (var position in boardSequence.MatchedPosition)
+            {
+                GameObject tile = _boardView.GetTileAtPosition(position.x, position.y);
+                if (tile != null)
+                {
+                    ButtonAnimationController buttonAnimation = tile.GetComponent<ButtonAnimationController>();
+                    if (buttonAnimation != null)
+                    {
+                        buttonAnimation.TriggerMatch3Feedback();
+                    }
+                }
+            }
+
             sequence.Append(_boardView.DestroyTiles(boardSequence.MatchedPosition));
             sequence.Append(_boardView.MoveTiles(boardSequence.MovedTiles));
             sequence.Append(_boardView.CreateTile(boardSequence.AddedTiles));
@@ -62,12 +78,31 @@ namespace Gazeus.DesafioMatch3.Project.Script.Controllers
         {
             if (_isAnimating) return;
 
+            GameObject tile = _boardView.GetTileAtPosition(x, y);
+            if (tile != null)
+            {
+                ButtonAnimationController buttonAnimation = tile.GetComponent<ButtonAnimationController>();
+                if (buttonAnimation != null)
+                {
+                    buttonAnimation.AnimateselectedEnter();
+                }
+            }
+
             if (_selectedX > -1 && _selectedY > -1)
             {
                 if (Mathf.Abs(_selectedX - x) + Mathf.Abs(_selectedY - y) > 1)
                 {
                     _selectedX = -1;
                     _selectedY = -1;
+
+                    if (tile != null)
+                    {
+                        ButtonAnimationController buttonAnimation = tile.GetComponent<ButtonAnimationController>();
+                        if (buttonAnimation != null)
+                        {
+                            buttonAnimation.AnimateSelectedExit();
+                        }
+                    }
                 }
                 else
                 {
@@ -86,6 +121,15 @@ namespace Gazeus.DesafioMatch3.Project.Script.Controllers
                         }
                         _selectedX = -1;
                         _selectedY = -1;
+
+                        if (tile != null)
+                        {
+                            ButtonAnimationController buttonAnimation = tile.GetComponent<ButtonAnimationController>();
+                            if (buttonAnimation != null)
+                            {
+                                buttonAnimation.AnimateSelectedExit();
+                            }
+                        }
                     };
                 }
             }

@@ -121,5 +121,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   clickScale: {x: 0.9, y: 0.95, z: 1}
   scaleDuration: 0.1
-  hoverScale: {x: 1.1, y: 1.1, z: 1}
-  hoverDuration: 0.2
+  selectedRotation: {x: 0, y: 0, z: 15}
+  rotationDuration: 0.2
+  clickFeedbackPrefab: {fileID: 7248708918492437785, guid: b8a589d66830c8b4497a2d400bb64209, type: 3}
+  match3FeedbackPrefab: {fileID: 196883781327419992, guid: ef51547fa415b224589c23691441aed3, type: 3}
+  feedbackOffset: {x: 0, y: 0, z: 0}

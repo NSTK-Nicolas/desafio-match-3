@@ -52,6 +52,15 @@ namespace Gazeus.DesafioMatch3.Project.Script.Views
                 }
             }
         }
+        
+        public GameObject GetTileAtPosition(int x, int y)
+        {
+            if (y >= 0 && y < _tiles.Length && x >= 0 && x < _tiles[y].Length)
+            {
+                return _tiles[y][x];
+            }
+            return null;
+        }
 
         public Tween CreateTile(List<AddedTileInfo> addedTiles)
         {
@@ -70,7 +79,22 @@ namespace Gazeus.DesafioMatch3.Project.Script.Views
                 _tiles[position.y][position.x] = tile;
 
                 tile.transform.localScale = Vector2.zero;
-                sequence.Join(tile.transform.DOScale(1.0f, 0.2f).SetEase(Ease.OutBack));
+
+                // Set initial position above the grid for falling effect
+                Vector3 startPosition = tile.transform.position + new Vector3(0, 500f, 0);
+                tile.transform.position = startPosition;
+
+                // Animate falling and scaling with squash and delay
+                sequence.Join(tile.transform.DOMove(tileSpot.transform.position, 0.5f).SetEase(Ease.OutBounce).SetDelay(0.1f * 0.5f).OnPlay(() =>
+                {
+                    // Squash effect
+                    Sequence squashSequence = DOTween.Sequence();
+                    squashSequence.Append(tile.transform.DOScale(new Vector3(1.2f, 0.8f, 1.0f), 0.1f).SetEase(Ease.OutBounce).SetDelay(0.1f * 1));
+                    squashSequence.Append(tile.transform.DOScale(Vector3.one, 0.1f).SetEase(Ease.OutBounce));
+                }));
+                sequence.Join(tile.transform.DOScale(1.0f, 0.2f).SetEase(Ease.OutBack).SetDelay(0.1f * 1));
+                
+                
             }
 
             return sequence;
@@ -85,7 +109,7 @@ namespace Gazeus.DesafioMatch3.Project.Script.Views
                 _tiles[position.y][position.x] = null;
             }
 
-            return DOVirtual.DelayedCall(0.2f, () => { });
+            return DOVirtual.DelayedCall(0.35f, () => { });
         }
 
         public Tween MoveTiles(List<MovedTileInfo> movedTiles)
