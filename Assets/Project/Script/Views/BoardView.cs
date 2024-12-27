@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using DG.Tweening;
+using Gazeus.DesafioMatch3.Project.Script.Feedbacks;
 using Gazeus.DesafioMatch3.Project.Script.Models;
 using Gazeus.DesafioMatch3.Project.Script.ScriptableObjects;
 using UnityEngine;
@@ -51,6 +52,19 @@ namespace Gazeus.DesafioMatch3.Project.Script.Views
                     }
                 }
             }
+        }
+        
+        public ButtonFeedbackController GetFeedbackControllerAtPosition(int x, int y)
+        {
+            if (y >= 0 && y < _tileSpots.Length && x >= 0 && x < _tileSpots[y].Length)
+            {
+                TileSpotView tileSpot = _tileSpots[y][x];
+                if (tileSpot != null)
+                {
+                    return tileSpot.GetComponent<ButtonFeedbackController>();
+                }
+            }
+            return null;
         }
         
         public GameObject GetTileAtPosition(int x, int y)

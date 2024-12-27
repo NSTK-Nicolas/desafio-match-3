@@ -1,11 +1,13 @@
 using DG.Tweening;
+using Gazeus.DesafioMatch3.Project.Script.Controllers;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace Gazeus.DesafioMatch3.Project.Script.Feedbacks
 {
     [RequireComponent(typeof(Button))]
-    public class ButtonAnimationController : MonoBehaviour
+    public class ButtonFeedbackController : MonoBehaviour
     {
         [Header("Animation Settings")]
         [Tooltip("Scale animation for the button")]
@@ -14,8 +16,9 @@ namespace Gazeus.DesafioMatch3.Project.Script.Feedbacks
 
         [Header("Rotation Settings")]
         [Tooltip("Rotation angle for the hover animation")]
-        public Vector3 selectedRotation = new Vector3(0f, 0f, 15f);
-        public float rotationDuration = 0.2f;
+        [SerializeField] private float shakeDuration = 0.2f;
+        [SerializeField] private float shakeStrength = 1.0f;
+        [SerializeField] private int shakeVibrato = 10;
 
         [Header("Feedback Settings")]
         [Tooltip("Prefab to instantiate on click")]
@@ -38,6 +41,20 @@ namespace Gazeus.DesafioMatch3.Project.Script.Feedbacks
                 InstantiateFeedback(clickFeedbackPrefab);
             });
         }
+        
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            // Notify the SelectionManager of this selection
+            var selectionManager = FindObjectOfType<SelectionManager>();
+            if (selectionManager != null)
+            {
+                selectionManager.Select(gameObject);
+            }
+
+            // Play selected animation
+            AnimateSelectedEnter();
+        }
+
 
         public void AnimateClick()
         {
@@ -47,16 +64,20 @@ namespace Gazeus.DesafioMatch3.Project.Script.Feedbacks
                 .OnComplete(() => transform.DOScale(Vector3.one, scaleDuration).SetEase(Ease.OutBounce));
         }
 
-        public void AnimateselectedEnter()
+        public void AnimateSelectedEnter()
         {
-            // Animate rotation on hover enter
-            transform.DORotate(selectedRotation, rotationDuration).SetEase(Ease.OutQuad);
+            // Shake on Z-axis
+            transform.DOShakeRotation(shakeDuration, new Vector3(0, 0, shakeStrength), shakeVibrato);
         }
 
         public void AnimateSelectedExit()
         {
-            // Reset rotation on hover exit
-            transform.DORotate(Vector3.zero, rotationDuration).SetEase(Ease.OutQuad);
+            // Reset rotation on shake exit
+            transform.DORotate(Vector3.zero, 0f).SetEase(Ease.Flash);
+            foreach (Transform child in transform)
+            {
+                child.DORotate(Vector3.zero, 0f).SetEase(Ease.Flash);
+            }
         }
 
         public void TriggerMatch3Feedback()

@@ -9,8 +9,9 @@
       <change beforePath="$PROJECT_DIR$/Assets/Project/Prefabs/Tiles/TileSpot.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Project/Prefabs/Tiles/TileSpot.prefab" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Project/Scenes/Gameplay.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Project/Scenes/Gameplay.unity" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Project/Script/Controllers/GameController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Project/Script/Controllers/GameController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Project/Script/Feedbacks.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Project/Script/Feedbacks.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Project/Script/Feedbacks/ButtonAnimationController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Project/Script/Feedbacks/ButtonAnimationController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Project/Script/Feedbacks/ButtonAnimationController.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Project/Script/Feedbacks/ButtonAnimationController.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Project/Script/Utils/ParticleSystemDestroyer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Project/Script/Utils/ParticleSystemDestroyer.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Project/Script/Views/BoardView.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Project/Script/Views/BoardView.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -23,7 +24,6 @@
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/../cult-summoner/Assets/Scripts/System/Canvas/CanvasScalerResolutionMatchUpdater.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/Project/Script/Controllers/ButtonAnimationController.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Project/Script/Utils/CanvasScalerResolutionMatchUpdater.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Project/Script/Utils/ParticleSystemDestroyer.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
@@ -109,7 +109,7 @@
       <workItem from="1734975127965" duration="7356000" />
       <workItem from="1735231108147" duration="6089000" />
       <workItem from="1735315157179" duration="6912000" />
-      <workItem from="1735325104328" duration="2445000" />
+      <workItem from="1735325104328" duration="7958000" />
     </task>
     <servers />
   </component>

@@ -19,6 +19,8 @@ namespace Gazeus.DesafioMatch3.Project.Script.Controllers
         private bool _isAnimating;
         private int _selectedX = -1;
         private int _selectedY = -1;
+        
+        private GameObject _currentlySelectedTile;
 
         #region Unity
         private void Awake()
@@ -45,18 +47,14 @@ namespace Gazeus.DesafioMatch3.Project.Script.Controllers
 
             Sequence sequence = DOTween.Sequence();
 
-            // Trigger Match 3 FX before destroying tiles
             foreach (var position in boardSequence.MatchedPosition)
             {
-                GameObject tile = _boardView.GetTileAtPosition(position.x, position.y);
-                if (tile != null)
+                var feedbackController = _boardView.GetFeedbackControllerAtPosition(position.x, position.y);
+                if (feedbackController != null)
                 {
-                    ButtonAnimationController buttonAnimation = tile.GetComponent<ButtonAnimationController>();
-                    if (buttonAnimation != null)
-                    {
-                        buttonAnimation.TriggerMatch3Feedback();
-                    }
+                    feedbackController.TriggerMatch3Feedback();
                 }
+                
             }
 
             sequence.Append(_boardView.DestroyTiles(boardSequence.MatchedPosition));
@@ -73,7 +71,7 @@ namespace Gazeus.DesafioMatch3.Project.Script.Controllers
                 sequence.onComplete += () => onComplete();
             }
         }
-
+        
         private void OnTileClick(int x, int y)
         {
             if (_isAnimating) return;
@@ -81,12 +79,26 @@ namespace Gazeus.DesafioMatch3.Project.Script.Controllers
             GameObject tile = _boardView.GetTileAtPosition(x, y);
             if (tile != null)
             {
-                ButtonAnimationController buttonAnimation = tile.GetComponent<ButtonAnimationController>();
+                // Reset the previously selected tile immediately
+                if (_currentlySelectedTile != null && _currentlySelectedTile != tile)
+                {
+                    var previousFeedback = _currentlySelectedTile.GetComponent<ButtonFeedbackController>();
+                    if (previousFeedback != null)
+                    {
+                        previousFeedback.AnimateSelectedExit();
+                    }
+                }
+
+                // Update the current selection
+                _currentlySelectedTile = tile;
+
+                ButtonFeedbackController buttonAnimation = tile.GetComponent<ButtonFeedbackController>();
                 if (buttonAnimation != null)
                 {
-                    buttonAnimation.AnimateselectedEnter();
+                    buttonAnimation.AnimateSelectedEnter();
                 }
             }
+            
 
             if (_selectedX > -1 && _selectedY > -1)
             {
@@ -94,15 +106,6 @@ namespace Gazeus.DesafioMatch3.Project.Script.Controllers
                 {
                     _selectedX = -1;
                     _selectedY = -1;
-
-                    if (tile != null)
-                    {
-                        ButtonAnimationController buttonAnimation = tile.GetComponent<ButtonAnimationController>();
-                        if (buttonAnimation != null)
-                        {
-                            buttonAnimation.AnimateSelectedExit();
-                        }
-                    }
                 }
                 else
                 {
@@ -121,15 +124,6 @@ namespace Gazeus.DesafioMatch3.Project.Script.Controllers
                         }
                         _selectedX = -1;
                         _selectedY = -1;
-
-                        if (tile != null)
-                        {
-                            ButtonAnimationController buttonAnimation = tile.GetComponent<ButtonAnimationController>();
-                            if (buttonAnimation != null)
-                            {
-                                buttonAnimation.AnimateSelectedExit();
-                            }
-                        }
                     };
                 }
             }
@@ -141,3 +135,4 @@ namespace Gazeus.DesafioMatch3.Project.Script.Controllers
         }
     }
 }
+

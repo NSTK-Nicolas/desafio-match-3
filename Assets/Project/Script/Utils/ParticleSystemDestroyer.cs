@@ -1,10 +1,13 @@
 using UnityEngine;
 
-public class ParticleSystemDestroyer : MonoBehaviour
+namespace Gazeus.DesafioMatch3.Project.Script.Utils
 {
-    // This function can be called from an event to destroy the GameObject
-    public void DestroyGameObject()
+    public class ParticleSystemDestroyer : MonoBehaviour
     {
-        Destroy(gameObject);
+        // This function can be called from an event to destroy the GameObject
+        public void DestroyGameObject()
+        {
+            Destroy(gameObject);
+        }
     }
 }
