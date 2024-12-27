@@ -14,6 +14,15 @@ public class ButtonAnimationController : MonoBehaviour
     public Vector3 hoverScale = new Vector3(1.1f, 1.1f, 1f);
     public float hoverDuration = 0.2f;
 
+    [Header("Feedback Settings")]
+    [Tooltip("Prefab to instantiate on click")]
+    public GameObject clickFeedbackPrefab;
+    [Tooltip("Prefab to instantiate on Match 3")]
+    public GameObject match3FeedbackPrefab;
+    
+    [Tooltip("Position offset for the feedback instantiation")]
+    public Vector3 feedbackOffset = Vector3.zero;
+
     private Button button;
 
     private void Awake()
@@ -21,7 +30,10 @@ public class ButtonAnimationController : MonoBehaviour
         button = GetComponent<Button>();
 
         // Attach default click behavior
-        button.onClick.AddListener(() => AnimateClick());
+        button.onClick.AddListener(() => {
+            AnimateClick();
+            InstantiateFeedback(clickFeedbackPrefab);
+        });
     }
 
     public void AnimateClick()
@@ -42,5 +54,20 @@ public class ButtonAnimationController : MonoBehaviour
     {
         // Animate scale on hover exit
         transform.DOScale(Vector3.one, hoverDuration).SetEase(Ease.OutQuad);
+    }
+
+    public void TriggerMatch3Feedback()
+    {
+        // Instantiate feedback for Match 3
+        InstantiateFeedback(match3FeedbackPrefab);
+    }
+
+    private void InstantiateFeedback(GameObject feedbackPrefab)
+    {
+        if (feedbackPrefab != null)
+        {
+            // Instantiate the prefab at the button's position + offset
+            Instantiate(feedbackPrefab, transform.position + feedbackOffset, Quaternion.identity);
+        }
     }
 }

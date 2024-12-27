@@ -70,7 +70,7 @@ namespace Gazeus.DesafioMatch3.Project.Script.Views
                 _tiles[position.y][position.x] = tile;
 
                 tile.transform.localScale = Vector2.zero;
-                sequence.Join(tile.transform.DOScale(1.0f, 0.2f));
+                sequence.Join(tile.transform.DOScale(1.0f, 0.2f).SetEase(Ease.OutBack));
             }
 
             return sequence;
