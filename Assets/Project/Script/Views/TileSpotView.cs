@@ -26,7 +26,7 @@ namespace Gazeus.DesafioMatch3.Project.Script.Views
             tile.transform.SetParent(transform);
             tile.transform.DOKill();
 
-            return tile.transform.DOMove(transform.position, 0.3f);
+            return tile.transform.DOMove(transform.position, 0.3f).SetEase(Ease.OutBack);
         }
 
         public void SetPosition(int x, int y)
