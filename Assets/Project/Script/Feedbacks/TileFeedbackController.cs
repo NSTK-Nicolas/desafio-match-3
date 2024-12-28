@@ -7,7 +7,7 @@ using UnityEngine.UI;
 namespace Gazeus.DesafioMatch3.Project.Script.Feedbacks
 {
     [RequireComponent(typeof(Button))]
-    public class ButtonFeedbackController : MonoBehaviour
+    public class TileFeedbackController : MonoBehaviour
     {
         [Header("Animation Settings")]
         [Tooltip("Scale animation for the button")]
@@ -16,9 +16,12 @@ namespace Gazeus.DesafioMatch3.Project.Script.Feedbacks
 
         [Header("Rotation Settings")]
         [Tooltip("Rotation angle for the hover animation")]
-        [SerializeField] private float shakeDuration = 0.2f;
-        [SerializeField] private float shakeStrength = 1.0f;
-        [SerializeField] private int shakeVibrato = 10;
+        [SerializeField] private Transform visualTransform;
+        [SerializeField] private float trembleDuration = 0.2f;
+        [SerializeField] private float trembleAngle = 15f;
+        [SerializeField] private int trembleLoops = 3;
+        
+        private Tween _currentTween;
 
         [Header("Feedback Settings")]
         [Tooltip("Prefab to instantiate on click")]
@@ -42,19 +45,6 @@ namespace Gazeus.DesafioMatch3.Project.Script.Feedbacks
             });
         }
         
-        public void OnPointerClick(PointerEventData eventData)
-        {
-            // Notify the SelectionManager of this selection
-            var selectionManager = FindObjectOfType<SelectionManager>();
-            if (selectionManager != null)
-            {
-                selectionManager.Select(gameObject);
-            }
-
-            // Play selected animation
-            AnimateSelectedEnter();
-        }
-
 
         public void AnimateClick()
         {
@@ -64,21 +54,33 @@ namespace Gazeus.DesafioMatch3.Project.Script.Feedbacks
                 .OnComplete(() => transform.DOScale(Vector3.one, scaleDuration).SetEase(Ease.OutBounce));
         }
 
-        public void AnimateSelectedEnter()
+        public void AnimateSelection()
         {
-            // Shake on Z-axis
-            transform.DOShakeRotation(shakeDuration, new Vector3(0, 0, shakeStrength), shakeVibrato);
+            // Garante que qualquer animação anterior seja interrompida
+            _currentTween?.Kill();
+
+            // Anima a rotação no eixo Z para um efeito de tremelique
+            _currentTween = visualTransform.DORotate(new Vector3(0, 0, trembleAngle), trembleDuration / 2)
+                .SetLoops(trembleLoops * 2, LoopType.Yoyo)
+                .SetEase(Ease.InOutSine);
         }
 
-        public void AnimateSelectedExit()
+        /// <summary>
+        /// Reseta a rotação do GameObject para zero.
+        /// </summary>
+        public void ResetFeedback()
         {
-            // Reset rotation on shake exit
-            transform.DORotate(Vector3.zero, 0f).SetEase(Ease.Flash);
-            foreach (Transform child in transform)
+            // Reseta a rotação e escala do visualTransform
+            visualTransform.DORotate(Vector3.zero, 0.1f).SetEase(Ease.OutQuad);
+            visualTransform.DOScale(Vector3.one, 0.1f).SetEase(Ease.OutQuad);
+
+            // Reseta a rotação de todos os filhos no eixo Z
+            foreach (Transform child in visualTransform)
             {
-                child.DORotate(Vector3.zero, 0f).SetEase(Ease.Flash);
+                child.localRotation = Quaternion.Euler(0, 0, 0);
             }
         }
+
 
         public void TriggerMatch3Feedback()
         {
@@ -95,5 +97,7 @@ namespace Gazeus.DesafioMatch3.Project.Script.Feedbacks
                 feedbackInstance.transform.SetParent(transform, true);
             }
         }
+
+        
     }
 }

@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4848857104108155981}
   - component: {fileID: 5862253929491694634}
   - component: {fileID: 4426560027000408984}
+  - component: {fileID: 7613804652946912730}
   m_Layer: 5
   m_Name: FX_Destruction
   m_TagString: Untagged
@@ -1183,7 +1184,10 @@ MonoBehaviour:
   _rate: 0
   _rateOverLifetime: 1
   _rateOverDistance: 0
-  _bursts: []
+  _bursts:
+  - time: 0
+    count: 1
+    used: 0
   _trailRenderer: {fileID: 0}
   _trailModule:
     enabled: 0
@@ -1372,12 +1376,37 @@ MonoBehaviour:
       m_Calls: []
   _onStop:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 7613804652946912730}
+        m_TargetAssemblyTypeName: Gazeus.DesafioMatch3.Project.Script.Utils.ParticleSystemDestroyer,
+          DesafioMatch3
+        m_MethodName: DestroyGameObject
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   moduleEmitterFoldout: 1
   moduleParticleFoldout: 1
   moduleMovementFoldout: 0
-  moduleEventsFoldout: 0
+  moduleEventsFoldout: 1
   m_Texture: {fileID: 2800000, guid: d2981a54a6369fc4aa5c3730311eb66b, type: 3}
+--- !u!114 &7613804652946912730
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 196883781327419992}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41f2a21284a04d640abb6ad6ef30b9c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4960273821292363430
 GameObject:
   m_ObjectHideFlags: 0

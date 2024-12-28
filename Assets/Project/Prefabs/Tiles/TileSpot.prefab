@@ -11,7 +11,8 @@ GameObject:
   - component: {fileID: 928004715130932088}
   - component: {fileID: -4864831497923239132}
   - component: {fileID: 3397252726085345414}
-  - component: {fileID: 6361015993298592096}
+  - component: {fileID: 9001624946237459325}
+  - component: {fileID: 1092123397864594606}
   m_Layer: 5
   m_Name: TileSpot
   m_TagString: Untagged
@@ -94,20 +95,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 0}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6361015993298592096}
-        m_TargetAssemblyTypeName: ButtonAnimationController, DesafioMatch3
-        m_MethodName: AnimateClick
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
---- !u!114 &6361015993298592096
+      m_Calls: []
+--- !u!114 &9001624946237459325
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -119,11 +108,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73485ac2ec9746e48899ac860510c8ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  clickScale: {x: 0.9, y: 0.95, z: 1}
-  scaleDuration: 0.1
-  shakeDuration: 1
-  shakeStrength: 15
-  shakeVibrato: 10
+  clickScale: {x: 0.9, y: 0.9, z: 1}
+  scaleDuration: 0.2
+  visualTransform: {fileID: 928004715130932088}
+  trembleDuration: 0.2
+  trembleAngle: 15
+  trembleLoops: 3
   clickFeedbackPrefab: {fileID: 7248708918492437785, guid: b8a589d66830c8b4497a2d400bb64209, type: 3}
   match3FeedbackPrefab: {fileID: 196883781327419992, guid: ef51547fa415b224589c23691441aed3, type: 3}
   feedbackOffset: {x: 0, y: 0, z: 0}
+--- !u!114 &1092123397864594606
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3755078240320407925}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e72d98c07bbe964c9f5eef61eba0527, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

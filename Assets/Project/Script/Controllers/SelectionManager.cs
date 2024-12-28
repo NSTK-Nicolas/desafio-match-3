@@ -1,40 +1,26 @@
+using DG.Tweening;
 using Gazeus.DesafioMatch3.Project.Script.Feedbacks;
 using UnityEngine;
 
-namespace Gazeus.DesafioMatch3.Project.Script.Controllers
+public class SelectionManager : MonoBehaviour
 {
-    public class SelectionManager : MonoBehaviour
+    private TileFeedbackController _currentlySelectedTile;
+    /// <summary>
+    /// Seleciona um novo tile e reseta o anterior, se necessário.
+    /// </summary>
+    /// <param name="newTile">O novo tile a ser selecionado.</param>
+    public void SelectTile(TileFeedbackController newTile)
     {
-        private GameObject _currentlySelected;
-
-        public void Select(GameObject newSelection)
+        // Reseta o feedback do tile atualmente selecionado, se for diferente do novo
+        if (_currentlySelectedTile != null && _currentlySelectedTile != newTile)
         {
-            // Reset the previous selection
-            if (_currentlySelected != null && _currentlySelected != newSelection)
-            {
-                var feedbackController = _currentlySelected.GetComponent<ButtonFeedbackController>();
-                if (feedbackController != null)
-                {
-                    feedbackController.AnimateSelectedExit();
-                }
-            }
-
-            // Update the currently selected object
-            _currentlySelected = newSelection;
+            _currentlySelectedTile.ResetFeedback();
+            Debug.Log("Resetei tudo");
         }
 
-        public void DeselectCurrent()
-        {
-            if (_currentlySelected != null)
-            {
-                var feedbackController = _currentlySelected.GetComponent<ButtonFeedbackController>();
-                if (feedbackController != null)
-                {
-                    feedbackController.AnimateSelectedExit();
-                }
-
-                _currentlySelected = null;
-            }
-        }
+        // Atualiza o tile selecionado e anima
+        _currentlySelectedTile = newTile;
+        _currentlySelectedTile.AnimateSelection();
     }
+    
 }

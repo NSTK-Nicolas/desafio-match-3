@@ -82,20 +82,20 @@ namespace Gazeus.DesafioMatch3.Project.Script.Controllers
                 // Reset the previously selected tile immediately
                 if (_currentlySelectedTile != null && _currentlySelectedTile != tile)
                 {
-                    var previousFeedback = _currentlySelectedTile.GetComponent<ButtonFeedbackController>();
+                    var previousFeedback = _currentlySelectedTile.GetComponent<TileFeedbackController>();
                     if (previousFeedback != null)
                     {
-                        previousFeedback.AnimateSelectedExit();
+                        previousFeedback.ResetFeedback();
                     }
                 }
 
                 // Update the current selection
                 _currentlySelectedTile = tile;
 
-                ButtonFeedbackController buttonAnimation = tile.GetComponent<ButtonFeedbackController>();
+                TileFeedbackController buttonAnimation = tile.GetComponent<TileFeedbackController>();
                 if (buttonAnimation != null)
                 {
-                    buttonAnimation.AnimateSelectedEnter();
+                    buttonAnimation.AnimateSelection();
                 }
             }
             

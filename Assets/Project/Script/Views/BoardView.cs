@@ -54,14 +54,14 @@ namespace Gazeus.DesafioMatch3.Project.Script.Views
             }
         }
         
-        public ButtonFeedbackController GetFeedbackControllerAtPosition(int x, int y)
+        public TileFeedbackController GetFeedbackControllerAtPosition(int x, int y)
         {
             if (y >= 0 && y < _tileSpots.Length && x >= 0 && x < _tileSpots[y].Length)
             {
                 TileSpotView tileSpot = _tileSpots[y][x];
                 if (tileSpot != null)
                 {
-                    return tileSpot.GetComponent<ButtonFeedbackController>();
+                    return tileSpot.GetComponent<TileFeedbackController>();
                 }
             }
             return null;
@@ -164,7 +164,23 @@ namespace Gazeus.DesafioMatch3.Project.Script.Views
 
             (_tiles[toY][toX], _tiles[fromY][fromX]) = (_tiles[fromY][fromX], _tiles[toY][toX]);
 
+            // Reset rotation and scale of the tiles
+            ResetTileTransform(_tiles[toX][toY]);
+            ResetTileTransform(_tiles[fromX][fromY]);
+
             return sequence;
+        }
+        
+        private void ResetTileTransform(GameObject tile)
+        {
+            if (tile != null)
+            {
+                var feedbackController = tile.GetComponent<TileFeedbackController>();
+                if (feedbackController != null)
+                {
+                    feedbackController.ResetFeedback();
+                }
+            }
         }
 
         #region Events
