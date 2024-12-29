@@ -1,16 +1,15 @@
-Shader "Custom/GradientWavesShaderUI"
+Shader "Custom/CircularGradientShaderUI"
 {
     Properties
     {
         _MainTex ("Main Texture", 2D) = "white" {}
         _Color1 ("Gradient Color 1", Color) = (1, 0, 0, 1)
-        _Color2 ("Gradient Color 2", Color) = (1, 1, 0, 1)
-        _Color3 ("Gradient Color 3", Color) = (0, 1, 0, 1)
-        _Color4 ("Gradient Color 4", Color) = (0, 0, 1, 1)
+        _Color2 ("Gradient Color 2", Color) = (0, 1, 0, 1)
+        _Color3 ("Gradient Color 3", Color) = (0, 0, 1, 1)
+        _Color4 ("Gradient Color 4", Color) = (1, 1, 0, 1)
         _Color5 ("Gradient Color 5", Color) = (1, 0, 1, 1)
-        _WaveFrequency ("Wave Frequency", Float) = 1.0
-        _WaveAmplitude ("Wave Amplitude", Float) = 0.5
         _WaveSpeed ("Wave Speed", Float) = 1.0
+        _CircleFrequency ("Circle Frequency", Float) = 5.0
     }
     SubShader
     {
@@ -44,9 +43,8 @@ Shader "Custom/GradientWavesShaderUI"
             float4 _Color3;
             float4 _Color4;
             float4 _Color5;
-            float _WaveFrequency;
-            float _WaveAmplitude;
             float _WaveSpeed;
+            float _CircleFrequency;
 
             v2f vert(appdata_t v)
             {
@@ -58,22 +56,20 @@ Shader "Custom/GradientWavesShaderUI"
 
             fixed4 frag(v2f i) : SV_Target
             {
-                // Calculate time-based values
+                // Center the UV coordinates around (0.5, 0.5)
+                float2 centeredUV = i.uv - 0.5;
+
+                // Calculate the radial distance from the center
+                float radialDistance = length(centeredUV);
+
+                // Add a time-based wave effect to the radial distance
                 float time = _Time.y * _WaveSpeed;
+                radialDistance += sin(radialDistance * _CircleFrequency + time) * 0.05;
 
-                // Apply sine wave to UV coordinates
-                float wave = sin(i.uv.x * _WaveFrequency + time) * _WaveAmplitude;
+                // Normalize the radial distance to create a repeating pattern
+                float gradientFactor = frac(radialDistance);
 
-                // Modify UV coordinates with wave effect
-                float2 uv = i.uv + float2(0.0, wave);
-
-                // Sample texture color
-                fixed4 texColor = tex2D(_MainTex, uv);
-
-                // Calculate gradient factor
-                float gradientFactor = frac(i.uv.y + wave);
-
-                // Determine segment of gradient
+                // Determine the segment of the gradient
                 float segment = gradientFactor * 5.0; // 5 segments for 5 colors
                 float blend = fmod(segment, 1.0); // Fractional part for interpolation
 
@@ -90,7 +86,10 @@ Shader "Custom/GradientWavesShaderUI"
                 else
                     gradientColor = lerp(_Color5, _Color1, blend); // Loop back to start
 
-                // Combine texture and gradient
+                // Sample texture color
+                fixed4 texColor = tex2D(_MainTex, i.uv);
+
+                // Combine the gradient color with the texture
                 fixed4 finalColor = texColor * gradientColor;
 
                 return finalColor;

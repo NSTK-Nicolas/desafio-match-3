@@ -19,10 +19,10 @@ namespace Gazeus.DesafioMatch3.Project.Script.Controllers
         [Header("Configurações de Animação do Material")]
         [Space]
         [SerializeField] private GameObject materialGameObject; // GameObject com o Material
-        [SerializeField] private float minWaveAmplitude = 0.5f; // Amplitude mínima
-        [SerializeField] private float maxWaveAmplitude = 2.0f; // Amplitude máxima
-        [SerializeField] private float amplitudeIncrement = 0.2f; // Incremento por match
-        [SerializeField] private float resetDelay = 3.0f; // Tempo de espera antes de resetar a amplitude
+        [SerializeField] private float minWaveSpeed = 0.5f; // Velocidade mínima
+        [SerializeField] private float maxWaveSpeed = 2.0f; // Velocidade máxima
+        [SerializeField] private float speedIncrement = 0.2f; // Incremento por match
+        [SerializeField] private float resetDelay = 3.0f; // Tempo de espera antes de resetar a velocidade
         [SerializeField] private float lerpSpeed = 1.0f; // Velocidade do Lerp
 
         private GameService _gameEngine;
@@ -32,11 +32,11 @@ namespace Gazeus.DesafioMatch3.Project.Script.Controllers
         private GameObject _currentlySelectedTile;
 
         private Material uiMaterial;
-        private float currentAmplitude;
-        private float targetAmplitude;
+        private float currentWaveSpeed;
+        private float targetWaveSpeed;
         private float resetTimer;
 
-        private void Awake()
+         private void Awake()
         {
             _gameEngine = new GameService();
             _boardView.TileClicked += OnTileClick;
@@ -56,8 +56,8 @@ namespace Gazeus.DesafioMatch3.Project.Script.Controllers
             }
 
             // Inicializa valores
-            currentAmplitude = minWaveAmplitude;
-            targetAmplitude = minWaveAmplitude;
+            currentWaveSpeed = minWaveSpeed;
+            targetWaveSpeed = minWaveSpeed;
         }
 
         private void OnDestroy()
@@ -73,20 +73,20 @@ namespace Gazeus.DesafioMatch3.Project.Script.Controllers
 
         private void Update()
         {
-            // Atualiza a amplitude atual com Lerp
-            if (currentAmplitude != targetAmplitude)
+            // Atualiza a velocidade atual com Lerp
+            if (currentWaveSpeed != targetWaveSpeed)
             {
-                currentAmplitude = Mathf.Lerp(currentAmplitude, targetAmplitude, Time.deltaTime * lerpSpeed);
-                UpdateShaderAmplitude(currentAmplitude);
+                currentWaveSpeed = Mathf.Lerp(currentWaveSpeed, targetWaveSpeed, Time.deltaTime * lerpSpeed);
+                UpdateShaderWaveSpeed(currentWaveSpeed);
             }
 
             // Gerencia o timer para resetar
-            if (targetAmplitude > minWaveAmplitude)
+            if (targetWaveSpeed > minWaveSpeed)
             {
                 resetTimer += Time.deltaTime;
                 if (resetTimer >= resetDelay)
                 {
-                    targetAmplitude = minWaveAmplitude;
+                    targetWaveSpeed = minWaveSpeed;
                 }
             }
         }
@@ -106,10 +106,10 @@ namespace Gazeus.DesafioMatch3.Project.Script.Controllers
                 }
             }
 
-            // Atualiza a sequência de matches e ajusta o target da amplitude
+            // Atualiza a sequência de matches e ajusta o target da velocidade
             if (boardSequence.MatchedPosition.Count > 0)
             {
-                AddToTargetAmplitude();
+                AddToTargetWaveSpeed();
             }
 
             sequence.Append(_boardView.DestroyTiles(boardSequence.MatchedPosition));
@@ -127,18 +127,18 @@ namespace Gazeus.DesafioMatch3.Project.Script.Controllers
             }
         }
 
-        private void AddToTargetAmplitude()
+        private void AddToTargetWaveSpeed()
         {
-            // Incrementa o target da amplitude
-            targetAmplitude = Mathf.Clamp(targetAmplitude + amplitudeIncrement, minWaveAmplitude, maxWaveAmplitude);
+            // Incrementa o target da velocidade
+            targetWaveSpeed = Mathf.Clamp(targetWaveSpeed + speedIncrement, minWaveSpeed, maxWaveSpeed);
             resetTimer = 0; // Reseta o timer para evitar o reset imediato
         }
 
-        private void UpdateShaderAmplitude(float amplitude)
+        private void UpdateShaderWaveSpeed(float waveSpeed)
         {
             if (uiMaterial != null)
             {
-                uiMaterial.SetFloat("_WaveAmplitude", amplitude);
+                uiMaterial.SetFloat("_WaveSpeed", waveSpeed);
             }
         }
 
@@ -149,6 +149,7 @@ namespace Gazeus.DesafioMatch3.Project.Script.Controllers
             GameObject tile = _boardView.GetTileAtPosition(x, y);
             if (tile != null)
             {
+                // Reset the previously selected tile immediately
                 if (_currentlySelectedTile != null && _currentlySelectedTile != tile)
                 {
                     var previousFeedback = _currentlySelectedTile.GetComponent<TileFeedbackController>();
@@ -157,6 +158,8 @@ namespace Gazeus.DesafioMatch3.Project.Script.Controllers
                         previousFeedback.ResetFeedback();
                     }
                 }
+
+                // Update the current selection
                 _currentlySelectedTile = tile;
 
                 TileFeedbackController buttonAnimation = tile.GetComponent<TileFeedbackController>();

@@ -511,7 +511,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   textMeshPro: {fileID: 264470431}
   typingSpeed: 0.6
-  fullText: . . . . Clica nas Jelequinhas.
+  fullText: . . . . Clica nas Jelequinhas
   startAutomatically: 1
 --- !u!114 &264470431
 MonoBehaviour:
