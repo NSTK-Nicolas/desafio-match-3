@@ -9,8 +9,10 @@ Developed in Unity 2022.3.55f1
 
 ### Referências Externas
 
-Particle Image Kit - https://assetstore.unity.com/publishers/54781
-Simple GUI Kit - https://assetstore.unity.com/packages/2d/gui/simple-gui-pack-167420
-Naughty Atributtes - https://assetstore.unity.com/packages/tools/utilities/naughtyattributes-129996
+• Particle Image Kit - https://assetstore.unity.com/publishers/54781
 
-Para todos os assets utilizados possuo licenças de uso comerciais. 
+• Simple GUI Kit - https://assetstore.unity.com/packages/2d/gui/simple-gui-pack-167420
+
+• Naughty Atributtes - https://assetstore.unity.com/packages/tools/utilities/naughtyattributes-129996
+
+_Para todos os assets utilizados possuo licenças de uso comerciais._ 
