@@ -57,11 +57,7 @@ public class ScatterAndReturn : MonoBehaviour
                 Vector3 scatterTarget = initialPositions[i] + direction * randomForce;
 
                 children[i].DOLocalMove(scatterTarget, scatterDuration).SetEase(Ease.OutQuad);
-                children[i].DOShakeScale(scatterDuration / 2, 0.2f, 10, 90, false).OnComplete(() =>
-                {
-                    if (!isSceneUnloading) // Evita animação adicional ao descarregar a cena
-                        children[i].DOScale(Vector3.one, scatterDuration / 2).SetEase(Ease.OutBack);
-                });
+                children[i].DOShakeScale(scatterDuration / 2, 0.2f, 10, 90, false).SetEase(Ease.OutBack);
             }
         }
 

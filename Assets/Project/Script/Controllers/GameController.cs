@@ -149,7 +149,6 @@ namespace Gazeus.DesafioMatch3.Project.Script.Controllers
             GameObject tile = _boardView.GetTileAtPosition(x, y);
             if (tile != null)
             {
-                // Reset the previously selected tile immediately
                 if (_currentlySelectedTile != null && _currentlySelectedTile != tile)
                 {
                     var previousFeedback = _currentlySelectedTile.GetComponent<TileFeedbackController>();
@@ -158,8 +157,6 @@ namespace Gazeus.DesafioMatch3.Project.Script.Controllers
                         previousFeedback.ResetFeedback();
                     }
                 }
-
-                // Update the current selection
                 _currentlySelectedTile = tile;
 
                 TileFeedbackController buttonAnimation = tile.GetComponent<TileFeedbackController>();

@@ -38,7 +38,6 @@ namespace Gazeus.DesafioMatch3.Project.Script.Feedbacks
         {
             button = GetComponent<Button>();
 
-            // Attach default click behavior
             button.onClick.AddListener(() => {
                 AnimateClick();
                 InstantiateFeedback(clickFeedbackPrefab);
@@ -48,7 +47,6 @@ namespace Gazeus.DesafioMatch3.Project.Script.Feedbacks
 
         public void AnimateClick()
         {
-            // Animate scale on click
             transform.DOScale(clickScale, scaleDuration)
                 .SetEase(Ease.OutQuad)
                 .OnComplete(() => transform.DOScale(Vector3.one, scaleDuration).SetEase(Ease.OutBounce));
@@ -62,7 +60,8 @@ namespace Gazeus.DesafioMatch3.Project.Script.Feedbacks
             // Anima a rotação no eixo Z para um efeito de tremelique
             _currentTween = visualTransform.DORotate(new Vector3(0, 0, trembleAngle), trembleDuration / 2)
                 .SetLoops(trembleLoops * 2, LoopType.Yoyo)
-                .SetEase(Ease.InOutSine);
+                .SetEase(Ease.InOutSine).OnComplete(ResetFeedback);
+
         }
 
         /// <summary>
@@ -84,7 +83,6 @@ namespace Gazeus.DesafioMatch3.Project.Script.Feedbacks
 
         public void TriggerMatch3Feedback()
         {
-            // Instantiate feedback for Match 3
             InstantiateFeedback(match3FeedbackPrefab);
         }
 
@@ -92,7 +90,6 @@ namespace Gazeus.DesafioMatch3.Project.Script.Feedbacks
         {
             if (feedbackPrefab != null)
             {
-                // Instantiate the prefab as a child of this GameObject
                 GameObject feedbackInstance = Instantiate(feedbackPrefab, transform.position + feedbackOffset, Quaternion.identity);
                 feedbackInstance.transform.SetParent(transform, true);
             }

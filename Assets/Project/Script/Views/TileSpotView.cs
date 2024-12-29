@@ -23,6 +23,7 @@ namespace Gazeus.DesafioMatch3.Project.Script.Views
 
         public Tween AnimatedSetTile(GameObject tile)
         {
+            ResetTileState(tile);
             tile.transform.SetParent(transform);
             tile.transform.DOKill();
 
@@ -44,6 +45,21 @@ namespace Gazeus.DesafioMatch3.Project.Script.Views
         private void OnTileClick()
         {
             Clicked?.Invoke(_x, _y);
+        }
+        
+        private void ResetTileState(GameObject tile)
+        {
+            if (tile != null)
+            {
+                tile.transform.localRotation = Quaternion.identity;
+                tile.transform.localScale = Vector3.one;
+
+                foreach (Transform child in tile.transform)
+                {
+                    child.localRotation = Quaternion.identity;
+                    child.localScale = Vector3.one;
+                }
+            }
         }
     }
 }

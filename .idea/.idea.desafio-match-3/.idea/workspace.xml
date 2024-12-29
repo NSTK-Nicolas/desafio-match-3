@@ -6,9 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="3df7d53d-f9c1-404d-9bd8-07e3ea9a7861" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.desafio-match-3/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.desafio-match-3/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Project/Scenes/Gameplay.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Project/Scenes/Gameplay.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Project/Scenes/MainMenu.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Project/Scenes/MainMenu.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Project/Script/DesafioMatch3.asmdef" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Project/Script/DesafioMatch3.asmdef" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Project/Script/Controllers/GameController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Project/Script/Controllers/GameController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Project/Script/Feedbacks/ScatterAndReturn.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Project/Script/Feedbacks/ScatterAndReturn.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Project/Script/Feedbacks/TileFeedbackController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Project/Script/Feedbacks/TileFeedbackController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Project/Script/Views/TileSpotView.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Project/Script/Views/TileSpotView.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -110,7 +111,7 @@
       <workItem from="1735315157179" duration="6912000" />
       <workItem from="1735325104328" duration="8251000" />
       <workItem from="1735395054166" duration="8073000" />
-      <workItem from="1735476833555" duration="5778000" />
+      <workItem from="1735476833555" duration="6944000" />
     </task>
     <servers />
   </component>
