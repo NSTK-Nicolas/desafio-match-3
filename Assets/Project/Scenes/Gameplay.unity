@@ -649,8 +649,8 @@ MonoBehaviour:
   _boardWidth: 10
   materialGameObject: {fileID: 691501893}
   minWaveAmplitude: 0.5
-  maxWaveAmplitude: 2
-  amplitudeIncrement: 0.2
+  maxWaveAmplitude: 6
+  amplitudeIncrement: 0.5
   resetDelay: 4
   lerpSpeed: 0.5
 --- !u!4 &1361904665
