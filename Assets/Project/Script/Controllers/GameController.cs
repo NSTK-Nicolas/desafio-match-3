@@ -6,6 +6,7 @@ using Gazeus.DesafioMatch3.Project.Script.Models;
 using Gazeus.DesafioMatch3.Project.Script.Views;
 using Gazeus.DesafioMatch3.Project.Script.Feedbacks;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Gazeus.DesafioMatch3.Project.Script.Controllers
 {
@@ -14,19 +15,49 @@ namespace Gazeus.DesafioMatch3.Project.Script.Controllers
         [SerializeField] private BoardView _boardView;
         [SerializeField] private int _boardHeight = 10;
         [SerializeField] private int _boardWidth = 10;
+        [Space]
+        [Header("Configurações de Animação do Material")]
+        [Space]
+        [SerializeField] private GameObject materialGameObject; // GameObject com o Material
+        [SerializeField] private float minWaveAmplitude = 0.5f; // Amplitude mínima
+        [SerializeField] private float maxWaveAmplitude = 2.0f; // Amplitude máxima
+        [SerializeField] private float amplitudeIncrement = 0.2f; // Incremento por match
+        [SerializeField] private float resetDelay = 3.0f; // Tempo de espera antes de resetar a amplitude
+        [SerializeField] private float lerpSpeed = 1.0f; // Velocidade do Lerp
 
         private GameService _gameEngine;
         private bool _isAnimating;
         private int _selectedX = -1;
         private int _selectedY = -1;
-        
         private GameObject _currentlySelectedTile;
 
-        #region Unity
+        private Material uiMaterial;
+        private float currentAmplitude;
+        private float targetAmplitude;
+        private float resetTimer;
+
         private void Awake()
         {
             _gameEngine = new GameService();
             _boardView.TileClicked += OnTileClick;
+
+            // Obtém o material do GameObject com Image
+            if (materialGameObject != null)
+            {
+                Image imageComponent = materialGameObject.GetComponent<Image>();
+                if (imageComponent != null)
+                {
+                    uiMaterial = imageComponent.material;
+                }
+                else
+                {
+                    Debug.LogError("O GameObject indicado não possui um componente Image.");
+                }
+            }
+
+            // Inicializa valores
+            currentAmplitude = minWaveAmplitude;
+            targetAmplitude = minWaveAmplitude;
         }
 
         private void OnDestroy()
@@ -39,7 +70,26 @@ namespace Gazeus.DesafioMatch3.Project.Script.Controllers
             List<List<Tile>> board = _gameEngine.StartGame(_boardWidth, _boardHeight);
             _boardView.CreateBoard(board);
         }
-        #endregion
+
+        private void Update()
+        {
+            // Atualiza a amplitude atual com Lerp
+            if (currentAmplitude != targetAmplitude)
+            {
+                currentAmplitude = Mathf.Lerp(currentAmplitude, targetAmplitude, Time.deltaTime * lerpSpeed);
+                UpdateShaderAmplitude(currentAmplitude);
+            }
+
+            // Gerencia o timer para resetar
+            if (targetAmplitude > minWaveAmplitude)
+            {
+                resetTimer += Time.deltaTime;
+                if (resetTimer >= resetDelay)
+                {
+                    targetAmplitude = minWaveAmplitude;
+                }
+            }
+        }
 
         private void AnimateBoard(List<BoardSequence> boardSequences, int index, Action onComplete)
         {
@@ -54,7 +104,12 @@ namespace Gazeus.DesafioMatch3.Project.Script.Controllers
                 {
                     feedbackController.TriggerMatch3Feedback();
                 }
-                
+            }
+
+            // Atualiza a sequência de matches e ajusta o target da amplitude
+            if (boardSequence.MatchedPosition.Count > 0)
+            {
+                AddToTargetAmplitude();
             }
 
             sequence.Append(_boardView.DestroyTiles(boardSequence.MatchedPosition));
@@ -71,7 +126,22 @@ namespace Gazeus.DesafioMatch3.Project.Script.Controllers
                 sequence.onComplete += () => onComplete();
             }
         }
-        
+
+        private void AddToTargetAmplitude()
+        {
+            // Incrementa o target da amplitude
+            targetAmplitude = Mathf.Clamp(targetAmplitude + amplitudeIncrement, minWaveAmplitude, maxWaveAmplitude);
+            resetTimer = 0; // Reseta o timer para evitar o reset imediato
+        }
+
+        private void UpdateShaderAmplitude(float amplitude)
+        {
+            if (uiMaterial != null)
+            {
+                uiMaterial.SetFloat("_WaveAmplitude", amplitude);
+            }
+        }
+
         private void OnTileClick(int x, int y)
         {
             if (_isAnimating) return;
@@ -98,7 +168,6 @@ namespace Gazeus.DesafioMatch3.Project.Script.Controllers
                     buttonAnimation.AnimateSelection();
                 }
             }
-            
 
             if (_selectedX > -1 && _selectedY > -1)
             {
@@ -135,4 +204,3 @@ namespace Gazeus.DesafioMatch3.Project.Script.Controllers
         }
     }
 }
-
