@@ -20,6 +20,13 @@ namespace Gazeus.DesafioMatch3.Project.Script.Views
         private GameObject[][] _tiles;
         private TileSpotView[][] _tileSpots;
         
+        [Header("Animation Curves")]
+        [SerializeField] private AnimationCurve spawnMoveCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
+        [SerializeField] private AnimationCurve spawnScaleCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
+        [SerializeField] private float spawnDuration = 0.5f;
+
+        [SerializeField] private AnimationCurve destroyScaleCurve = AnimationCurve.EaseInOut(0, 1, 1, 0);
+        [SerializeField] private float destroyDuration = 0.35f;
 
         public void CreateBoard(List<List<Tile>> board)
         {
@@ -95,20 +102,13 @@ namespace Gazeus.DesafioMatch3.Project.Script.Views
                 tile.transform.localScale = Vector2.zero;
 
                 // Set initial position above the grid for falling effect
-                Vector3 startPosition = tile.transform.position + new Vector3(0, 500f, 0);
-                tile.transform.position = startPosition;
+                sequence.Join(tile.transform.DOMove(tileSpot.transform.position, spawnDuration)
+                    .SetEase(spawnMoveCurve)
+                    .SetDelay(0.05f));
 
-                // Animate falling and scaling with squash and delay
-                sequence.Join(tile.transform.DOMove(tileSpot.transform.position, 0.5f).SetEase(Ease.OutBounce).SetDelay(0.1f * 0.5f).OnPlay(() =>
-                {
-                    // Squash effect
-                    Sequence squashSequence = DOTween.Sequence();
-                    squashSequence.Append(tile.transform.DOScale(new Vector3(1.2f, 0.8f, 1.0f), 0.1f).SetEase(Ease.OutBounce).SetDelay(0.1f * 1));
-                    squashSequence.Append(tile.transform.DOScale(Vector3.one, 0.1f).SetEase(Ease.OutBounce));
-                }));
-                sequence.Join(tile.transform.DOScale(1.0f, 0.2f).SetEase(Ease.OutBack).SetDelay(0.1f * 1));
-                
-                
+                sequence.Join(tile.transform.DOScale(1.0f, spawnDuration)
+                    .SetEase(spawnScaleCurve)
+                    .SetDelay(0.05f));
             }
 
             return sequence;
@@ -116,14 +116,22 @@ namespace Gazeus.DesafioMatch3.Project.Script.Views
 
         public Tween DestroyTiles(List<Vector2Int> matchedPosition)
         {
+            Sequence sequence = DOTween.Sequence();
+    
             for (int i = 0; i < matchedPosition.Count; i++)
             {
                 Vector2Int position = matchedPosition[i];
-                Destroy(_tiles[position.y][position.x]);
+                GameObject tile = _tiles[position.y][position.x];
+        
+                // Anima a escala para 0 antes de destruir usando a curva
+                sequence.Join(tile.transform.DOScale(Vector3.zero, destroyDuration)
+                    .SetEase(destroyScaleCurve)
+                    .OnComplete(() => Destroy(tile)));
+            
                 _tiles[position.y][position.x] = null;
             }
 
-            return DOVirtual.DelayedCall(0.35f, () => { });
+            return sequence;
         }
 
         public Tween MoveTiles(List<MovedTileInfo> movedTiles)

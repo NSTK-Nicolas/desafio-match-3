@@ -15,15 +15,16 @@ namespace Gazeus.DesafioMatch3.Project.Script.Controllers
         [SerializeField] private BoardView _boardView;
         [SerializeField] private int _boardHeight = 10;
         [SerializeField] private int _boardWidth = 10;
+
         [Space]
         [Header("Configurações de Animação do Material")]
         [Space]
-        [SerializeField] private GameObject materialGameObject; // GameObject com o Material
-        [SerializeField] private float minWaveSpeed = 0.5f; // Velocidade mínima
-        [SerializeField] private float maxWaveSpeed = 2.0f; // Velocidade máxima
-        [SerializeField] private float speedIncrement = 0.2f; // Incremento por match
-        [SerializeField] private float resetDelay = 3.0f; // Tempo de espera antes de resetar a velocidade
-        [SerializeField] private float lerpSpeed = 1.0f; // Velocidade do Lerp
+        [SerializeField] private GameObject materialGameObject;
+        [SerializeField] private float minWaveSpeed = 0.5f;
+        [SerializeField] private float maxWaveSpeed = 2.0f;
+        [SerializeField] private float speedIncrement = 0.2f;
+        [SerializeField] private float resetDelay = 3.0f;
+        [SerializeField] private float lerpSpeed = 1.0f;
 
         private GameService _gameEngine;
         private bool _isAnimating;
@@ -36,7 +37,10 @@ namespace Gazeus.DesafioMatch3.Project.Script.Controllers
         private float targetWaveSpeed;
         private float resetTimer;
 
-         private void Awake()
+        // Nova variável: controla se a cascata de matches está ativa
+        private bool _isCascadeActive = false;
+
+        private void Awake()
         {
             _gameEngine = new GameService();
             _boardView.TileClicked += OnTileClick;
@@ -73,19 +77,21 @@ namespace Gazeus.DesafioMatch3.Project.Script.Controllers
 
         private void Update()
         {
-            // Atualiza a velocidade atual com Lerp
-            if (currentWaveSpeed != targetWaveSpeed)
+            // Atualiza a velocidade atual com Lerp para suavidade
+            if (Mathf.Abs(currentWaveSpeed - targetWaveSpeed) > 0.001f)
             {
                 currentWaveSpeed = Mathf.Lerp(currentWaveSpeed, targetWaveSpeed, Time.deltaTime * lerpSpeed);
                 UpdateShaderWaveSpeed(currentWaveSpeed);
             }
 
-            // Gerencia o timer para resetar
-            if (targetWaveSpeed > minWaveSpeed)
+            // Só inicia o timer de reset se a cascata NÃO estiver mais ativa
+            // Isso garante que o shader continue acumulando ondulações durante toda a sequência
+            if (!_isCascadeActive && targetWaveSpeed > minWaveSpeed)
             {
                 resetTimer += Time.deltaTime;
                 if (resetTimer >= resetDelay)
                 {
+                    // O target volta ao mínimo e o Lerp acima suaviza a transição
                     targetWaveSpeed = minWaveSpeed;
                 }
             }
@@ -97,16 +103,20 @@ namespace Gazeus.DesafioMatch3.Project.Script.Controllers
 
             Sequence sequence = DOTween.Sequence();
 
+            // Quantidade de peças destruídas nesta etapa da cascata
+            int matchSize = boardSequence.MatchedPosition.Count;
+
             foreach (var position in boardSequence.MatchedPosition)
             {
                 var feedbackController = _boardView.GetFeedbackControllerAtPosition(position.x, position.y);
                 if (feedbackController != null)
                 {
-                    feedbackController.TriggerMatch3Feedback();
+                    // Passa o tamanho do match para permitir feedbacks distintos
+                    feedbackController.TriggerMatchFeedback(matchSize);
                 }
             }
 
-            // Atualiza a sequência de matches e ajusta o target da velocidade
+            // Atualiza a sequência de matches e ajusta o target da velocidade do shader
             if (boardSequence.MatchedPosition.Count > 0)
             {
                 AddToTargetWaveSpeed();
@@ -129,9 +139,9 @@ namespace Gazeus.DesafioMatch3.Project.Script.Controllers
 
         private void AddToTargetWaveSpeed()
         {
-            // Incrementa o target da velocidade
+            // Incrementa o target da velocidade progressivamente durante a cascata
             targetWaveSpeed = Mathf.Clamp(targetWaveSpeed + speedIncrement, minWaveSpeed, maxWaveSpeed);
-            resetTimer = 0; // Reseta o timer para evitar o reset imediato
+            // Não reseta o timer aqui pois a cascata está ativa e o timer está pausado
         }
 
         private void UpdateShaderWaveSpeed(float waveSpeed)
@@ -184,8 +194,15 @@ namespace Gazeus.DesafioMatch3.Project.Script.Controllers
                         bool isValid = _gameEngine.IsValidMovement(_selectedX, _selectedY, x, y);
                         if (isValid)
                         {
+                            _isCascadeActive = true;
+
                             List<BoardSequence> swapResult = _gameEngine.SwapTile(_selectedX, _selectedY, x, y);
-                            AnimateBoard(swapResult, 0, () => _isAnimating = false);
+                            AnimateBoard(swapResult, 0, () =>
+                            {
+                                _isAnimating = false;
+                                _isCascadeActive = false;
+                                resetTimer = 0f;
+                            });
                         }
                         else
                         {

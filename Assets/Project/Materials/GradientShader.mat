@@ -85,7 +85,7 @@ Material:
     - _UVSec: 0
     - _WaveAmplitude: 4.058257
     - _WaveFrequency: 2
-    - _WaveSpeed: 0.5001548
+    - _WaveSpeed: 0.7878184
     - _ZWrite: 1
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
@@ -98,3 +98,4 @@ Material:
     - _RandomFractal: {r: 1, g: 1, b: 1, a: 1}
     - _RandomOffset: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
+  m_AllowLocking: 1

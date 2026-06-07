@@ -13,6 +13,9 @@ namespace Gazeus.DesafioMatch3.Project.Script.Feedbacks
         [Tooltip("Scale animation for the button")]
         public Vector3 clickScale = new Vector3(0.9f, 0.9f, 1f);
         public float scaleDuration = 0.2f;
+        
+        [Header("Click Animation Curves")]
+        [SerializeField] private AnimationCurve clickScaleCurve = AnimationCurve.EaseInOut(0, 1, 1, 1);
 
         [Header("Rotation Settings")]
         [Tooltip("Rotation angle for the hover animation")]
@@ -28,6 +31,8 @@ namespace Gazeus.DesafioMatch3.Project.Script.Feedbacks
         public GameObject clickFeedbackPrefab;
         [Tooltip("Prefab to instantiate on Match 3")]
         public GameObject match3FeedbackPrefab;
+        public GameObject match4FeedbackPrefab;
+        public GameObject match5FeedbackPrefab;
     
         [Tooltip("Position offset for the feedback instantiation")]
         public Vector3 feedbackOffset = Vector3.zero;
@@ -47,9 +52,10 @@ namespace Gazeus.DesafioMatch3.Project.Script.Feedbacks
 
         public void AnimateClick()
         {
+            // Exemplo de uso de curva para o click
             transform.DOScale(clickScale, scaleDuration)
-                .SetEase(Ease.OutQuad)
-                .OnComplete(() => transform.DOScale(Vector3.one, scaleDuration).SetEase(Ease.OutBounce));
+                .SetEase(clickScaleCurve)
+                .OnComplete(() => transform.DOScale(Vector3.one, scaleDuration));
         }
 
         public void AnimateSelection()
@@ -81,9 +87,16 @@ namespace Gazeus.DesafioMatch3.Project.Script.Feedbacks
         }
 
 
-        public void TriggerMatch3Feedback()
+        public void TriggerMatchFeedback(int matchSize)
         {
-            InstantiateFeedback(match3FeedbackPrefab);
+            GameObject prefabToUse = match3FeedbackPrefab;
+    
+            if (matchSize == 4 && match4FeedbackPrefab != null)
+                prefabToUse = match4FeedbackPrefab;
+            else if (matchSize >= 5 && match5FeedbackPrefab != null)
+                prefabToUse = match5FeedbackPrefab;
+
+            InstantiateFeedback(prefabToUse);
         }
 
         private void InstantiateFeedback(GameObject feedbackPrefab)

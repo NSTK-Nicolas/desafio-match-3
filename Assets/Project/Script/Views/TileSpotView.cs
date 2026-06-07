@@ -10,9 +10,13 @@ namespace Gazeus.DesafioMatch3.Project.Script.Views
         public event Action<int, int> Clicked;
 
         [SerializeField] private Button _button;
+        [SerializeField] private AnimationCurve moveCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
+        [SerializeField] private float moveDuration = 0.3f;
 
         private int _x;
         private int _y;
+        
+        
 
         #region Unity
         private void Awake()
@@ -27,7 +31,7 @@ namespace Gazeus.DesafioMatch3.Project.Script.Views
             tile.transform.SetParent(transform);
             tile.transform.DOKill();
 
-            return tile.transform.DOMove(transform.position, 0.3f).SetEase(Ease.OutBack);
+            return tile.transform.DOMove(transform.position, moveDuration).SetEase(moveCurve);
         }
 
         public void SetPosition(int x, int y)
