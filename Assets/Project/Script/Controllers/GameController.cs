@@ -92,7 +92,7 @@ namespace Gazeus.DesafioMatch3.Project.Script.Controllers
                 if (resetTimer >= resetDelay)
                 {
                     // O target volta ao mínimo e o Lerp acima suaviza a transição
-                    targetWaveSpeed = minWaveSpeed;
+                    //targetWaveSpeed = minWaveSpeed;
                 }
             }
         }

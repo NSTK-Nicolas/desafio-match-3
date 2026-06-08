@@ -85,7 +85,7 @@ Material:
     - _UVSec: 0
     - _WaveAmplitude: 4.058257
     - _WaveFrequency: 2
-    - _WaveSpeed: 0.7878184
+    - _WaveSpeed: 4.0990014
     - _ZWrite: 1
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
